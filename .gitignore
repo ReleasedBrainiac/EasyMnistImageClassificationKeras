@@ -1,0 +1,2 @@
+#Depends on: https://github.com/github/gitignore/blob/master/Python.gitignore
+__pycache__/
