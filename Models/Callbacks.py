@@ -104,12 +104,14 @@ class Callbacks(object):
                                   batch_size:int = 128, 
                                   verbose:int = 1,
                                   save_weights_only:bool = True,
-                                  save_frequency_multiplier:int = 5) -> Callback:
+                                  save_frequency_multiplier:int = 5,
+                                  save_best_only:bool = True) -> Callback:
         try:
             return keras.callbacks.ModelCheckpoint(filepath=checkpoint_path, 
                                                    verbose=verbose, 
                                                    save_weights_only=save_weights_only,
-                                                   save_freq=save_frequency_multiplier*batch_size)
+                                                   save_freq=save_frequency_multiplier*batch_size,
+                                                   save_best_only=save_best_only)
         except Exception as ex:
             template = "An exception of type {exception} occurred in [{cname}.{fname}]. Arguments:\n{rest!r}"
             message = template.format(exception = type(ex).__name__, cname = self._class_name, fname = inspect.currentframe().f_code.co_name, rest = ex.args)
