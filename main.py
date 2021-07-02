@@ -1,4 +1,10 @@
 """
+Necessary Libs and Frameworks (NOT nightly):
+
+1. Tensorflow 2 (CPU/GPU) -> https://www.tensorflow.org/install
+2. Graphviz -> https://graphviz.gitlab.io/download/
+3. Pydot -> pip install pydot
+
 Resources:
 
 1. https://keras.io/
@@ -12,14 +18,7 @@ Resources:
 9. http://yann.lecun.com/exdb/mnist/index.html
 10. https://www.tensorflow.org/guide/gpu
 
-Necessary Libs and Frameworks (NOT nightly):
-
-1. Tensorflow 2 (CPU/GPU) -> https://www.tensorflow.org/install
-2. Graphviz -> https://graphviz.gitlab.io/download/
-3. Pydot -> pip install pydot
-
 """
-
 
 
 from Dataset.DatasetProvider import DatasetProvider
@@ -78,6 +77,7 @@ class MnistDigitClassification():
                                         optimizer = "adam",
                                         metrics = ["accuracy"],
                                         validation_split = 0.1,
+                                        callbacks = ["checkpoint"],
                                         verbose = 1)
 
             score = models.EvaluateModel(model = model,
