@@ -1,0 +1,1 @@
+# This repository describes a upcoming example for mnist digit and character recognition
