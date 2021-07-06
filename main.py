@@ -20,32 +20,37 @@ Resources:
 
 """
 
-
-from Dataset.DatasetProvider import DatasetProvider
-from Models.Models import Models
 import inspect
 import tensorflow as tf
+
+from Models.Models import Models
+from Dataset.DatasetProvider import DatasetProvider
+from Support.SupportProvider import SupportProvider
 
 class MnistDigitClassification():
 
     _class_name:str = None
+    _support:SupportProvider = None
 
     def __init__(self, verbose:int = 0) -> None:  
         try:
             gpus:int = len(tf.config.list_physical_devices('GPU'))
+            self._support = SupportProvider()
+            self._class_name = __class__.__name__
+
             print("Num GPUs Available: ", gpus)
 
             if (gpus > 0 and verbose > 0):
                 tf.debugging.set_log_device_placement(True)
-
-            self._class_name = __class__.__name__
+            
             self.Execute()
         except Exception as ex:
-            template = "An exception of type {exception} occurred in [{cname}.{fname}]. Arguments:\n{rest!r}"
-            message = template.format(exception = type(ex).__name__, cname = self._class_name, fname = inspect.currentframe().f_code.co_name, rest = ex.args)
-            print(message)
+            self._support.ExceptMessage(classname = self._class_name,
+                                        funcname=inspect.currentframe().f_code.co_name,
+                                        exception=ex)
 
-    def Execute(self):
+    def Execute(self,
+                use_sequential_model:bool = True) -> any:
 
         try:
 
@@ -60,13 +65,26 @@ class MnistDigitClassification():
                                                                 num_classes = _num_classes_handwritten_digits)
 
             models:Models = Models()
-            model = models.BuildModel(input_shape = input_shape,
-                                      number_of_classes = _num_classes_handwritten_digits,
-                                      convolutional_activation = "relu",
-                                      kernel_convolutuion = (3, 3),
-                                      kernel_pooling = (2, 2),
-                                      drop_out = 0.5,
-                                      classification_activation = "softmax")
+
+            if(use_sequential_model):
+                print("Using sequential model!")
+                model = models.BuildModelSequential(input_shape = input_shape,
+                                                    number_of_classes = _num_classes_handwritten_digits,
+                                                    convolutional_activation = "relu",
+                                                    kernel_convolutuion = (3, 3),
+                                                    kernel_pooling = (2, 2),
+                                                    drop_out = 0.5,
+                                                    classification_activation = "softmax")
+
+            else:
+                print("Using sequential model!")
+                model = models.BuildModelFunctional(input_shape = input_shape,
+                                                    number_of_classes = _num_classes_handwritten_digits,
+                                                    convolutional_activation = "relu",
+                                                    kernel_convolutuion = (3, 3),
+                                                    kernel_pooling = (2, 2),
+                                                    drop_out = 0.5,
+                                                    classification_activation = "softmax")
 
             history = models.TrainModel(model = model,
                                         x_train = x_train,
@@ -84,10 +102,13 @@ class MnistDigitClassification():
                                         x_test = x_test,
                                         y_test = y_test,
                                         verbose = 1)
+
+            print("Return model score and history.")
+            return score, history
         except Exception as ex:
-            template = "An exception of type {exception} occurred in [{cname}.{fname}]. Arguments:\n{rest!r}"
-            message = template.format(exception = type(ex).__name__, cname = self._class_name, fname = inspect.currentframe().f_code.co_name, rest = ex.args)
-            print(message)
+            self._support.ExceptMessage(classname = self._class_name,
+                                        funcname=inspect.currentframe().f_code.co_name,
+                                        exception=ex)
 
 if __name__ == "__main__":
     MnistDigitClassification(verbose = 0)

@@ -8,24 +8,29 @@ Resources:
 """
 
 import inspect
-from tensorflow.keras.optimizers import RMSprop, Adam, Nadam, Adagrad, Adadelta, Adamax, Ftrl, SGD
+
+from Support.SupportProvider import SupportProvider
+from tensorflow.keras.optimizers import RMSprop, Adam, Nadam, Adagrad, Adadelta, Adamax, Ftrl, SGD, Optimizer
 
 class Optimizers(object):
 
     _class_name:str = None
+    _support:SupportProvider = None
 
     def __init__(self) -> None:  
         try:
-            self._class_name = __class__.__name__
+
             print("Init Optimizers class")
+            self._class_name = __class__.__name__
+            self._support = SupportProvider()
+            
         except Exception as ex:
-            template = "An exception of type {exception} occurred in [{cname}.{fname}]. Arguments:\n{rest!r}"
-            message = template.format(exception = type(ex).__name__, cname = self._class_name, fname = inspect.currentframe().f_code.co_name, rest = ex.args)
-            print(message)
+            self._support.ExceptMessage(classname = self._class_name,
+                                        funcname=inspect.currentframe().f_code.co_name,
+                                        exception=ex)
 
     #TODO: Proof functionality of all optimizers
-
-    def get_optimizer(self, name:str,  clipvalue:float=20.0, learn_rate:float=0.001, amsgrad:bool=False, decay:float=0.004, epsilon:float=1e-07):
+    def get_optimizer(self, name:str,  clipvalue:float=20.0, learn_rate:float=0.001, amsgrad:bool=False, decay:float=0.004, epsilon:float=1e-07) -> Optimizer:
         try:
             if name.lower() == 'adadelta':
                 return Adadelta(lr=learn_rate, rho=0.95, epsilon=epsilon, decay=decay, clipvalue=clipvalue)
@@ -55,6 +60,6 @@ class Optimizers(object):
                 return SGD(lr=learn_rate, momentum=0.0, nesterov=False)
 
         except Exception as ex:
-            template = "An exception of type {0} occurred in [ModelBuilder.get_optimizer]. Arguments:\n{1!r}"
-            message = template.format(type(ex).__name__, ex.args)
-            print(message) 
+            self._support.ExceptMessage(classname = self._class_name,
+                                        funcname=inspect.currentframe().f_code.co_name,
+                                        exception=ex)
