@@ -8,28 +8,21 @@ Resources:
 
 """
 
-import inspect
 import tensorflow as tf
 
 from tensorflow import keras
 from tensorflow.keras import callbacks
 from tensorflow.keras.callbacks import Callback
-from Support.SupportProvider import SupportProvider
 
 class Callbacks(object):
 
-    _class_name:str = None
     _epoch_border:int = 10
-    _support:SupportProvider = None
 
     def __init__(self) -> None:  
         try:
-            self._class_name = __class__.__name__
-            print("Init Callbacks class")
+            print("Init " +__class__.__name__+ " class")
         except Exception as ex:
-            self._support.ExceptMessage(classname = self._class_name,
-                                        funcname=inspect.currentframe().f_code.co_name,
-                                        exception=ex)
+            raise
 
     def get_callbacks(self, 
                       names:list,
@@ -79,18 +72,14 @@ class Callbacks(object):
             else:
                 return lr * tf.math.exp(-0.1)
         except Exception as ex:
-            self._support.ExceptMessage(classname = self._class_name,
-                                        funcname=inspect.currentframe().f_code.co_name,
-                                        exception=ex)
+            raise
 
 
     def BaseLogger(self) -> Callback:
         try:
             return keras.callbacks.BaseLogger()
         except Exception as ex:
-            self._support.ExceptMessage(classname = self._class_name,
-                                        funcname=inspect.currentframe().f_code.co_name,
-                                        exception=ex)
+            raise
 
     def EarlyStoppingOnMissingImprovement(self,
                                           monitor_value:str = 'val_loss',
@@ -101,9 +90,7 @@ class Callbacks(object):
                                                  mode=monitor_mode, 
                                                  patience=monitor_patience)
         except Exception as ex:
-            self._support.ExceptMessage(classname = self._class_name,
-                                        funcname=inspect.currentframe().f_code.co_name,
-                                        exception=ex)
+            raise
 
     def ReduceLearningrateOnPlateau(self,
                                     monitor_value:str = 'val_loss',
@@ -118,9 +105,7 @@ class Callbacks(object):
                                                      min_lr=min_learning_rate, 
                                                      verbose=verbose)
         except Exception as ex:
-            self._support.ExceptMessage(classname = self._class_name,
-                                        funcname=inspect.currentframe().f_code.co_name,
-                                        exception=ex)
+            raise
 
     def ModelTrainStateCheckpoint(self, 
                                   checkpoint_path:str = './checkpoints/my_checkpoint',
@@ -136,9 +121,7 @@ class Callbacks(object):
                                                    save_freq=save_frequency_multiplier*batch_size,
                                                    save_best_only=save_best_only)
         except Exception as ex:
-            self._support.ExceptMessage(classname = self._class_name,
-                                        funcname=inspect.currentframe().f_code.co_name,
-                                        exception=ex)
+            raise
 
     def CSVEpochStreamLogger(self,
                              filename:str = "stream_log",
@@ -147,17 +130,13 @@ class Callbacks(object):
         try:
             return keras.callbacks.CSVLogger(filename=filename, separator=seperator, append=append_content)
         except Exception as ex:
-            self._support.ExceptMessage(classname = self._class_name,
-                                        funcname=inspect.currentframe().f_code.co_name,
-                                        exception=ex)
+            raise
 
     def RecordEventAsHistory(self) -> Callback:
         try:
             return keras.callbacks.History()
         except Exception as ex:
-            self._support.ExceptMessage(classname = self._class_name,
-                                        funcname=inspect.currentframe().f_code.co_name,
-                                        exception=ex)
+            raise
 
     def LearningRateScheduler(self,
                              schedule_function:any,
@@ -165,9 +144,7 @@ class Callbacks(object):
         try:
             return keras.callbacks.LearningRateScheduler(schedule=schedule_function, verbose=verbose)
         except Exception as ex:
-            self._support.ExceptMessage(classname = self._class_name,
-                                        funcname=inspect.currentframe().f_code.co_name,
-                                        exception=ex)
+            raise
 
     def MetricsToConsoleLogger(self,
                                count_mode:str = 'samples',
@@ -176,9 +153,7 @@ class Callbacks(object):
             return keras.callbacks.ProgbarLogger(count_mode = count_mode, 
                                                  stateful_metrics = iterable_string_metrics)
         except Exception as ex:
-            self._support.ExceptMessage(classname = self._class_name,
-                                        funcname=inspect.currentframe().f_code.co_name,
-                                        exception=ex)
+            raise
 
     def StreamEventToServer(self,
                             server_root:str = 'http://localhost:9000',
@@ -193,9 +168,7 @@ class Callbacks(object):
                                                  headers = http_headers,
                                                  send_as_json = send_as_json)
         except Exception as ex:
-            self._support.ExceptMessage(classname = self._class_name,
-                                        funcname=inspect.currentframe().f_code.co_name,
-                                        exception=ex)
+            raise
 
     def VisualizeOnTensorBoard(self,
                                logs_dest:str = 'logs',
@@ -218,14 +191,10 @@ class Callbacks(object):
                                                embeddings_metadata = embeddings_metadata,
                                                **kwargs)
         except Exception as ex:
-            self._support.ExceptMessage(classname = self._class_name,
-                                        funcname=inspect.currentframe().f_code.co_name,
-                                        exception=ex)
+            raise
 
     def StopTrainingOnNanLoss(self) -> Callback:
         try:
             return keras.callbacks.TerminateOnNaN()
         except Exception as ex:
-            self._support.ExceptMessage(classname = self._class_name,
-                                        funcname=inspect.currentframe().f_code.co_name,
-                                        exception=ex)
+            raise

@@ -1,25 +1,16 @@
-import inspect
 import numpy as np
 
 from tensorflow import keras
-from Support.SupportProvider import SupportProvider
 
 class DatasetProvider(object):
-
-    _class_name:str = None
-    _support:SupportProvider = None
 
     def __init__(self) -> None:  
         try:
 
-            print("Init DatasetProvider class")
-            self._class_name = __class__.__name__
-            self._support = SupportProvider()
+            print("Init " +__class__.__name__+ " class")
             
         except Exception as ex:
-            self._support.ExceptMessage(classname = self._class_name,
-                                        funcname=inspect.currentframe().f_code.co_name,
-                                        exception=ex)
+            raise
 
     def LoadMnistNumberImages(self, verbose:int = 0) -> any:
         try:
@@ -53,9 +44,7 @@ class DatasetProvider(object):
             return x_train, y_train, x_test, y_test, input_shape
 
         except Exception as ex:
-            self._support.ExceptMessage(classname = self._class_name,
-                                        funcname=inspect.currentframe().f_code.co_name,
-                                        exception=ex)
+            raise
 
     def ConvertClassesToBinaryVectors(self, 
                                       y_train:any,
@@ -68,6 +57,4 @@ class DatasetProvider(object):
             return y_train, y_test
 
         except Exception as ex:
-            self._support.ExceptMessage(classname = self._class_name,
-                                        funcname=inspect.currentframe().f_code.co_name,
-                                        exception=ex)
+            raise

@@ -20,23 +20,20 @@ Resources:
 
 """
 
-import inspect
 import tensorflow as tf
 
 from Models.Models import Models
 from Dataset.DatasetProvider import DatasetProvider
-from Support.SupportProvider import SupportProvider
 
 class MnistDigitClassification():
 
     _class_name:str = None
-    _support:SupportProvider = None
 
     def __init__(self, verbose:int = 0) -> None:  
         try:
             gpus:int = len(tf.config.list_physical_devices('GPU'))
-            self._support = SupportProvider()
-            self._class_name = __class__.__name__
+
+            print("Init " +__class__.__name__+ " class")
 
             print("Num GPUs Available: ", gpus)
 
@@ -45,9 +42,7 @@ class MnistDigitClassification():
             
             self.Execute()
         except Exception as ex:
-            self._support.ExceptMessage(classname = self._class_name,
-                                        funcname=inspect.currentframe().f_code.co_name,
-                                        exception=ex)
+            raise
 
     def Execute(self,
                 use_sequential_model:bool = True) -> any:
@@ -106,9 +101,7 @@ class MnistDigitClassification():
             print("Return model score and history.")
             return score, history
         except Exception as ex:
-            self._support.ExceptMessage(classname = self._class_name,
-                                        funcname=inspect.currentframe().f_code.co_name,
-                                        exception=ex)
+            raise
 
 if __name__ == "__main__":
     MnistDigitClassification(verbose = 0)

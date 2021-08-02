@@ -1,34 +1,24 @@
 # Resource 1: https://www.tensorflow.org/tutorials/keras/save_and_load
 # pip install pyyaml h5py  # Required to save models in HDF5 format
 
-import inspect
-
 from tensorflow import keras
 from tensorflow.keras import layers
 from Models.Callbacks import Callbacks
 from Optimizers.Optimizers import Optimizers
 from tensorflow.keras.utils import plot_model
 from tensorflow.keras.optimizers import Optimizer
-from Support.SupportProvider import SupportProvider
 from tensorflow.python.keras.models import Sequential
 from tensorflow.python.keras.callbacks import Callback
 
 class Models(object):
 
-    _class_name:str = None
-    _support:SupportProvider = None
-
     def __init__(self) -> None:  
         try:
 
-            print("Init Models class")
-            self._class_name = __class__.__name__
-            self._support = SupportProvider()
+            print("Init " +__class__.__name__+ " class")
 
         except Exception as ex:
-            self._support.ExceptMessage(classname = self._class_name,
-                                        funcname=inspect.currentframe().f_code.co_name,
-                                        exception=ex)
+            raise
 
     def BuildModelSequential(self,
               input_shape:tuple,
@@ -60,9 +50,7 @@ class Models(object):
 
             return model
         except Exception as ex:
-            self._support.ExceptMessage(classname = self._class_name,
-                                        funcname=inspect.currentframe().f_code.co_name,
-                                        exception=ex)
+            raise
 
     def BuildModelFunctional(self,
               input_shape:tuple,
@@ -91,9 +79,7 @@ class Models(object):
             return keras.Model(inputs=[input_layer], outputs=[output])
 
         except Exception as ex:
-            self._support.ExceptMessage(classname = self._class_name,
-                                        funcname=inspect.currentframe().f_code.co_name,
-                                        exception=ex)
+            raise
 
     def TrainModel(self,
               model:Sequential,
@@ -160,9 +146,7 @@ class Models(object):
             return history
 
         except Exception as ex:
-            self._support.ExceptMessage(classname = self._class_name,
-                                        funcname=inspect.currentframe().f_code.co_name,
-                                        exception=ex)
+            raise
 
     def EvaluateModel(self,
                  model:Sequential,
@@ -179,36 +163,28 @@ class Models(object):
             return score
             
         except Exception as ex:
-            self._support.ExceptMessage(classname = self._class_name,
-                                        funcname=inspect.currentframe().f_code.co_name,
-                                        exception=ex)
+            raise
 
     #//TODO: Missing functionality in Predict
     def Predict(self) -> any:
         try:
             return None
         except Exception as ex:
-            self._support.ExceptMessage(classname = self._class_name,
-                                        funcname=inspect.currentframe().f_code.co_name,
-                                        exception=ex)
+            raise
 
     #//TODO: Missing functionality in Store
     def Store(self) -> any:
         try:
             return None
         except Exception as ex:
-            self._support.ExceptMessage(classname = self._class_name,
-                                        funcname=inspect.currentframe().f_code.co_name,
-                                        exception=ex)
+            raise
 
     #//TODO: Missing functionality in Load
     def Load(self) -> any:
         try:
             return None
         except Exception as ex:
-            self._support.ExceptMessage(classname = self._class_name,
-                                        funcname=inspect.currentframe().f_code.co_name,
-                                        exception=ex)
+            raise
 
 if __name__ == "__main__":
     Models()
