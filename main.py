@@ -81,14 +81,21 @@ class MnistDigitClassification():
                                                     drop_out = 0.5,
                                                     classification_activation = "softmax")
 
+            model = models.CompileModel(model = model,
+                                        metrics = ["accuracy"],
+                                        optimizer = "adam",
+                                        loss_function = "categorical_crossentropy",
+                                        lr = 0.001,
+                                        verbose = 1)
+
             history = models.TrainModel(model = model,
                                         x_train = x_train,
                                         y_train = y_train,
                                         batch_size = 64,
                                         epochs = 20,
-                                        loss_function = "categorical_crossentropy",
-                                        optimizer = "adam",
-                                        metrics = ["accuracy"],
+                                        #loss_function = "categorical_crossentropy",
+                                        #optimizer = "adam",
+                                        #metrics = ["accuracy"],
                                         validation_split = 0.1,
                                         callbacks = ["checkpoint"],
                                         verbose = 1)

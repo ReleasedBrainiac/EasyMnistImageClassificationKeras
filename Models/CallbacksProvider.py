@@ -8,13 +8,14 @@ Resources:
 
 """
 
+from typing import List
 import tensorflow as tf
 
 from tensorflow import keras
-from tensorflow.keras import callbacks
+#from tensorflow.keras import callbacks
 from tensorflow.keras.callbacks import Callback
 
-class Callbacks(object):
+class CallbacksProvider(object):
 
     _epoch_border:int = 10
 
@@ -27,7 +28,7 @@ class Callbacks(object):
     def get_callbacks(self, 
                       names:list,
                       epochs:int = 20,
-                      lr:float = 0.005):
+                      lr:float = 0.005) -> (list|any):
 
         callbacks:list = []
 
