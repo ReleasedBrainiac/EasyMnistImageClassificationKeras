@@ -1,5 +1,6 @@
-# Upcoming example for MNIST digit and character recognition
+# Example for MNIST digit and character recognition
 
+## Status [In Progress]
 
 ## Necessary Libs and Frameworks (NOT nightly):
 
