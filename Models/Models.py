@@ -81,7 +81,7 @@ class Models(object):
             raise
 
     def CompileModel(self,
-                     model:Sequential,
+                     model,
                      metrics:list = ["accuracy"],
                      optimizer:str = "adam",
                      loss_function:str = "categorical_crossentropy",
@@ -114,14 +114,11 @@ class Models(object):
             raise
 
     def TrainModel(self,
-              model:Sequential,
+              model,
               x_train,
               y_train,
               batch_size:int = 128,
               epochs:int = 15,
-              #loss_function:str = "categorical_crossentropy",
-              #optimizer:str = "adam",
-              #metrics:list = ["accuracy"],
               validation_split:float = 0.1,
               callbacks:list = ["checkpoint"],
               verbose:int = 0) -> any:
@@ -131,28 +128,7 @@ class Models(object):
                 print("Show input shapes")
                 print("x_train: " + str(x_train.shape))
                 print("y_train: " + str(y_train.shape))
-            """
-            if(verbose > 0): 
-                print("Set chosen optimizer.")
-
-            opts:Optimizers = Optimizers()
-            used_opt:Optimizer = opts.get_optimizer(name = optimizer, 
-                                                    learn_rate = 0.001)
-
-            if(verbose > 0): 
-                print("Compile deep neural model.")
-
-            model.compile(  loss=loss_function, 
-                            optimizer=used_opt, 
-                            metrics=metrics)
-
-            if(verbose > 0): 
-                print("Print summary in console and store neural graph structure as image.")
-
-            model.summary()
-            plot_model(model, to_file='model_1.png', show_shapes=True)
-            """
-
+            
             if(verbose > 0): 
                 print("Start deep neural model training pipeline based on given callbacks.")
 
@@ -173,15 +149,15 @@ class Models(object):
 
 
             if(verbose > 0): 
-                print("Returning model train history.")
+                print("Returning model and train history.")
                 
-            return history
+            return history, model
 
         except Exception as ex:
             raise
 
     def EvaluateModel(self,
-                 model:Sequential,
+                 model,
                  x_test,
                  y_test,
                  verbose:int = 0) -> any:

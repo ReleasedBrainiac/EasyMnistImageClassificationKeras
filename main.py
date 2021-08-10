@@ -19,15 +19,27 @@ Resources:
 10. https://www.tensorflow.org/guide/gpu
 
 """
-
+import os
 import tensorflow as tf
 
 from Models.Models import Models
 from Dataset.DatasetProvider import DatasetProvider
+from Models.CallbacksProvider import CallbacksProvider
 
 class MnistDigitClassification():
 
     _class_name:str = None
+    _epochs:int = 10
+    _batch_size:int = 128
+    _validation_split:float = 0.1
+    _callbacks:list = ['checkpoint']
+    _drop_out:float = 0.5
+    _classification_activation:str = 'softmax'
+    _metrics:list = ['accuracy']
+    _optimizer:str = 'adam'
+    _loss_function:str = 'categorical_crossentropy'
+    _lr:float = 0.01
+    _verbose:int = 1
 
     def __init__(self, verbose:int = 0) -> None:  
         try:
@@ -54,7 +66,7 @@ class MnistDigitClassification():
             _num_classes_handwritten_digits:int = 10
             dspv:DatasetProvider = DatasetProvider()
 
-            x_train, y_train, x_test, y_test, input_shape = dspv.LoadMnistNumberImages(verbose=1)
+            x_train, y_train, x_test, y_test, input_shape = dspv.LoadMnistNumberImages(verbose = self._verbose)
             y_train, y_test = dspv.ConvertClassesToBinaryVectors( y_test = y_test,
                                                                 y_train = y_train,
                                                                 num_classes = _num_classes_handwritten_digits)
@@ -68,8 +80,8 @@ class MnistDigitClassification():
                                                     convolutional_activation = "relu",
                                                     kernel_convolutuion = (3, 3),
                                                     kernel_pooling = (2, 2),
-                                                    drop_out = 0.5,
-                                                    classification_activation = "softmax")
+                                                    drop_out = self._drop_out,
+                                                    classification_activation = self._classification_activation)
 
             else:
                 print("Using sequential model!")
@@ -78,32 +90,31 @@ class MnistDigitClassification():
                                                     convolutional_activation = "relu",
                                                     kernel_convolutuion = (3, 3),
                                                     kernel_pooling = (2, 2),
-                                                    drop_out = 0.5,
-                                                    classification_activation = "softmax")
+                                                    drop_out = self._drop_out,
+                                                    classification_activation = self._classification_activation)
 
             model = models.CompileModel(model = model,
-                                        metrics = ["accuracy"],
-                                        optimizer = "adam",
-                                        loss_function = "categorical_crossentropy",
-                                        lr = 0.001,
-                                        verbose = 1)
+                                        metrics = self._metrics,
+                                        optimizer = self._optimizer,
+                                        loss_function = self._loss_function,
+                                        lr = self._lr,
+                                        verbose = self._verbose)
 
             history = models.TrainModel(model = model,
                                         x_train = x_train,
                                         y_train = y_train,
-                                        batch_size = 64,
-                                        epochs = 20,
-                                        #loss_function = "categorical_crossentropy",
-                                        #optimizer = "adam",
-                                        #metrics = ["accuracy"],
-                                        validation_split = 0.1,
-                                        callbacks = ["checkpoint"],
-                                        verbose = 1)
+                                        batch_size = self._batch_size,
+                                        epochs = self._epochs,
+                                        validation_split = self._validation_split,
+                                        callbacks = self._callbacks,
+                                        verbose = self._verbose)
+
+            #print("Save model checpoints: " + os.listdir(CallbacksProvider()._checkpoint_dir))
 
             score = models.EvaluateModel(model = model,
                                         x_test = x_test,
                                         y_test = y_test,
-                                        verbose = 1)
+                                        verbose = self._verbose)
 
             print("Return model score and history.")
             return score, history

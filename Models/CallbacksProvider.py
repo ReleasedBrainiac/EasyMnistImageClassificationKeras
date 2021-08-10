@@ -7,28 +7,35 @@ Resources:
 2. https://www.tensorflow.org/guide/keras/custom_callback
 
 """
-
-from typing import List
+import os
 import tensorflow as tf
 
 from tensorflow import keras
-#from tensorflow.keras import callbacks
 from tensorflow.keras.callbacks import Callback
 
 class CallbacksProvider(object):
 
     _epoch_border:int = 10
+    _usable_callbacks:list = ["base", "earlystop", "reducelr", "checkpoint", "csv", "history", "lrscheduler", "metrics", "streamserv", "tensorboard", "nanloss"]
 
-    def __init__(self) -> None:  
+    _checkpoint_path = "training_checkpoints/cp-{epoch:04d}.ckpt"
+    _checkpoint_dir = os.path.dirname(_checkpoint_path)
+
+
+    def __init__(self
+                ) -> None:  
         try:
             print("Init " +__class__.__name__+ " class")
+            print("Usable Callbacks: " + ", ".join(self._usable_callbacks))
+
+
         except Exception as ex:
             raise
 
     def get_callbacks(self, 
                       names:list,
                       epochs:int = 20,
-                      lr:float = 0.005) -> (list|any):
+                      lr:float = 0.005) -> any:
 
         callbacks:list = []
 
@@ -41,7 +48,7 @@ class CallbacksProvider(object):
 
             if (name == 'reducelronplateau' or name == "reducelr"): callbacks.append(self.ReduceLearningrateOnPlateau())
 
-            if (name == 'modelcheckpoint' or name == "checkpoint"): callbacks.append(self.ModelTrainStateCheckpoint())
+            if (name == 'modelcheckpoint' or name == "checkpoint"): callbacks.append(self.ModelTrainStateCheckpoint(checkpoint_path = self._checkpoint_path))
 
             if (name == 'csvepochstream' or name == "csv"): callbacks.append(self.CSVEpochStreamLogger())
 
@@ -53,7 +60,7 @@ class CallbacksProvider(object):
 
             if (name == 'metricslogger' or name == "metrics"): callbacks.append(self.MetricsToConsoleLogger())
 
-            if (name == 'streamtoserver' or name == "server"): callbacks.append(self.StreamEventToServer())
+            if (name == 'streamtoserver' or name == "streamserv"): callbacks.append(self.StreamEventToServer())
 
             if (name == 'vizualizetensorboard' or name == "tensorboard"): callbacks.append(self.VisualizeOnTensorBoard())
 
@@ -74,7 +81,6 @@ class CallbacksProvider(object):
                 return lr * tf.math.exp(-0.1)
         except Exception as ex:
             raise
-
 
     def BaseLogger(self) -> Callback:
         try:
@@ -109,13 +115,16 @@ class CallbacksProvider(object):
             raise
 
     def ModelTrainStateCheckpoint(self, 
-                                  checkpoint_path:str = './checkpoints/my_checkpoint',
+                                  checkpoint_path:str,
                                   batch_size:int = 128, 
                                   verbose:int = 1,
                                   save_weights_only:bool = True,
                                   save_frequency_multiplier:int = 5,
                                   save_best_only:bool = True) -> Callback:
         try:
+            if (checkpoint_path == None):
+                checkpoint_path = "training_checkpoints/cp-{epoch:04d}.ckpt"
+
             return keras.callbacks.ModelCheckpoint(filepath=checkpoint_path, 
                                                    verbose=verbose, 
                                                    save_weights_only=save_weights_only,
